@@ -1,4 +1,4 @@
-name: Ahmed-FF-Final-V53
+name: Ahmed-FF-Final-V54
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,8 +8,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Ahmed Tweak
+      - name: Build and Upload Directly
         run: |
+          # 1. كتابة كود المنيو
           cat <<EOF > Tweak.mm
           #import <Foundation/Foundation.h>
           #import <UIKit/UIKit.h>
@@ -74,7 +75,7 @@ jobs:
               [self addOpt:@"F_G7" y:250 t:107];
               [self addOpt:@"F_H8" y:290 t:108];
 
-              self.s.contentSize = CGSizeMake(300, 400);
+              self.s.contentSize = CGSizeMake(300, 420);
 
               UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
               r.frame = CGRectMake(50, 410, 200, 40);
@@ -115,13 +116,13 @@ jobs:
           }
           @end
 
-          # بناء الملف وتأكيد مكانه
+          # 2. بناء الملف
           clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
           -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Upload and Get Link
-        run: |
-          # رفع الملف لخدمة bashupload (رابط مباشر وسريع)
-          echo "تحميل الملف من الرابط التالي:"
-          curl https://bashupload.com/AhmedTweak.dylib --data-binary @AhmedTweak.dylib
+          # 3. الرفع الفوري والحصول على الرابط
+          echo "--------------------------------------------------"
+          echo "أحمد، رابط التحميل المباشر للملف هو:"
+          curl --upload-file ./AhmedTweak.dylib https://free.keep.sh/AhmedTweak.dylib
+          echo -e "\n--------------------------------------------------"
