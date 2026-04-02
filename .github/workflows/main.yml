@@ -1,8 +1,5 @@
-name: Ahmed-FF-Final-V51
+name: Ahmed-FF-Final-V52
 on: [push, workflow_dispatch]
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -122,9 +119,7 @@ jobs:
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
           -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Release Final
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: "Ahmed_V51"
-          name: "Ahmed VIP Final"
-          files: AhmedTweak.dylib
+      - name: Get Direct Download Link
+        run: |
+          echo "رابط التحميل المباشر هو:"
+          curl --upload-file ./AhmedTweak.dylib https://transfer.sh/AhmedTweak.dylib
