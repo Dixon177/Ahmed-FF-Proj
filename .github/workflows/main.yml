@@ -1,4 +1,4 @@
-name: Ahmed-FF-Pro-V46
+name: Ahmed-FF-Pro-V47
 on: [push, workflow_dispatch]
 
 jobs:
@@ -16,10 +16,13 @@ jobs:
           #import <mach-o/dyld.h>
           #import <sys/mman.h>
 
-          // دالة حقن مبسطة لضمان نجاح البناء في الموقع
+          // دالة حقن يدوية تتخطى أخطاء التعريفات
           void _0x_patch(uintptr_t offset, uint32_t data) {
               uintptr_t addr = _dyld_get_image_header(0) + offset;
-              mprotect((void *)(addr & ~PAGE_MASK), PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC);
+              // استخدام قيم ثابتة بدلاً من PAGE_SIZE و PAGE_MASK لتجنب خطأ الموقع
+              size_t pageSize = 0x4000; 
+              uintptr_t pageStart = addr & ~(pageSize - 1);
+              mprotect((void *)pageStart, pageSize, PROT_READ | PROT_WRITE | PROT_EXEC);
               *(uint32_t *)addr = data;
           }
 
@@ -63,7 +66,7 @@ jobs:
               self.p.hidden = YES;
 
               UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 300, 30)];
-              t.text = @"A H M E D - V 4 6";
+              t.text = @"A H M E D - V 4 7";
               t.textColor = [UIColor whiteColor];
               t.textAlignment = NSTextAlignmentCenter;
               [self.p addSubview:t];
@@ -71,18 +74,17 @@ jobs:
               self.s = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 300, 350)];
               [self.p addSubview:self.s];
 
-              // الميزات بأسماء مموهة للحماية
-              [self addOpt:@"F_A1" y:10 t:101]; // Headshot
-              [self addOpt:@"F_B2" y:50 t:102]; // AimLock
-              [self addOpt:@"F_C3" y:90 t:103]; // Antenna
-              [self addOpt:@"F_D4" y:130 t:104]; // Recoil
-              [self addOpt:@"F_E5" y:170 t:105]; // Speed
-              [self addOpt:@"F_F6" y:210 t:106]; // Jump
-              [self addOpt:@"F_G7" y:250 t:107]; // Knife
-              [self addOpt:@"F_H8" y:290 t:108]; // Fog
-              [self addOpt:@"F_I9" y:330 t:109]; // Black Sky
+              [self addOpt:@"F_A1" y:10 t:101];
+              [self addOpt:@"F_B2" y:50 t:102];
+              [self addOpt:@"F_C3" y:90 t:103];
+              [self addOpt:@"F_D4" y:130 t:104];
+              [self addOpt:@"F_E5" y:170 t:105];
+              [self addOpt:@"F_F6" y:210 t:106];
+              [self addOpt:@"F_G7" y:250 t:107];
+              [self addOpt:@"F_H8" y:290 t:108];
+              [self addOpt:@"F_I9" y:330 t:109];
 
-              self.s.contentSize = CGSizeMake(300, 380);
+              self.s.contentSize = CGSizeMake(300, 400);
 
               UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
               r.frame = CGRectMake(50, 410, 200, 40);
@@ -141,5 +143,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed_V46_Dylib
+          name: Ahmed_V47_Dylib
           path: AhmedTweak.dylib
