@@ -1,4 +1,4 @@
-name: Ahmed-FF-Final-V60
+name: Ahmed-VIP-V61
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,7 +8,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Ahmed Tweak
+      - name: Write Tweak Code
         run: |
           cat <<EOF > Tweak.mm
           #import <Foundation/Foundation.h>
@@ -115,13 +115,18 @@ jobs:
           }
           @end
 
-          clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
+      - name: Compile Tweak
+        run: |
+          xcrun -sdk iphoneos clang -dynamiclib -arch arm64 \
+          -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
+          -O3 Tweak.mm -o AhmedTweak.dylib
+          
+          # تأكيد وجود الملف
+          ls -l AhmedTweak.dylib
 
-      - name: Final Upload
+      - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed-VIP-Package
+          name: Ahmed-VIP-Final
           path: AhmedTweak.dylib
-          if-no-files-found: error
