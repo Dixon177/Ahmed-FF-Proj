@@ -1,4 +1,4 @@
-name: Ahmed-FF-Final-V48
+name: Ahmed-FF-Final-V49
 on: [push, workflow_dispatch]
 
 jobs:
@@ -16,12 +16,15 @@ jobs:
           #import <mach-o/dyld.h>
           #import <sys/mman.h>
 
+          // دالة حقن احترافية متوافقة مع المترجم الصارم
           void _patch(uintptr_t offset, uint32_t data) {
               uintptr_t addr = _dyld_get_image_header(0) + offset;
               size_t ps = 0x4000; 
               uintptr_t start = addr & ~(ps - 1);
-              mprotect((void *)start, ps, PROT_READ | PROT_WRITE | PROT_EXEC);
-              *(uint32_t *)addr = data;
+              // تحويل النوع لـ (void *) لتجنب خطأ Pointer Types
+              if (mprotect((void *)start, ps, PROT_READ | PROT_WRITE | PROT_EXEC) == 0) {
+                  *(uint32_t *)addr = data;
+              }
           }
 
           @interface AhmedMenu : UIView
@@ -73,7 +76,7 @@ jobs:
               [self addOpt:@"F_G7" y:250 t:107];
               [self addOpt:@"F_H8" y:290 t:108];
 
-              self.s.contentSize = CGSizeMake(300, 350);
+              self.s.contentSize = CGSizeMake(300, 380);
 
               UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
               r.frame = CGRectMake(50, 410, 200, 40);
@@ -114,20 +117,12 @@ jobs:
           }
           @end
 
-          __attribute__((constructor)) static void init() {
-              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                  UIWindow *w = [UIApplication sharedApplication].keyWindow ?: [UIApplication sharedApplication].windows.firstObject;
-                  if (w) [w addSubview:[[AhmedMenu alloc] initWithFrame:w.bounds]];
-              });
-          }
-          EOF
-
           clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -w -O3 Tweak.mm -o AhmedTweak.dylib
+          -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed_Final_V48
+          name: Ahmed_Final_Dylib
           path: AhmedTweak.dylib
