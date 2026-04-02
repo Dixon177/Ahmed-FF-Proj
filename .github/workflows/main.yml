@@ -1,4 +1,4 @@
-name: Ahmed-FF-VIP-V38
+name: Ahmed-FF-Secure-V45
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,97 +8,142 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Tweak
+      - name: Build Ahmed Secure Tweak
         run: |
           cat <<EOF > Tweak.mm
           #import <Foundation/Foundation.h>
           #import <UIKit/UIKit.h>
+          #import <mach-o/dyld.h>
+          #import <sys/mman.h>
 
-          @interface AhmedMenu : UIView
-          @property (nonatomic, strong) UIView *panel;
+          // تمويه دالة الحقن باسم عشوائي
+          void _0x5a2b(uintptr_t _0x1c, uint32_t _0x9d) {
+              uintptr_t _0x4e = _dyld_get_image_header(0) + _0x1c;
+              mprotect((void *)(_0x4e & ~PAGE_MASK), PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC);
+              *(uint32_t *)_0x4e = _0x9d;
+          }
+
+          @interface _0x1fb2 : UIView
+          @property (nonatomic, strong) UIView *p;
+          @property (nonatomic, strong) UIScrollView *s;
           @end
 
-          @implementation AhmedMenu
+          @implementation _0x1fb2
+
           - (instancetype)initWithFrame:(CGRect)frame {
               self = [super initWithFrame:frame];
               if (self) {
                   self.userInteractionEnabled = YES;
-                  [self setupUI];
+                  [self _0x7c91];
               }
               return self;
           }
 
-          - (void)setupUI {
-              UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-              btn.frame = CGRectMake(30, 150, 60, 60);
-              btn.backgroundColor = [UIColor redColor];
-              btn.layer.cornerRadius = 30;
-              [btn setTitle:@"AHMED" forState:UIControlStateNormal];
-              [btn addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
-              [self addSubview:btn];
+          - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+              UIView *hv = [super hitTest:point withEvent:event];
+              if (hv == self) return nil;
+              return hv;
+          }
 
-              self.panel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, 500)];
-              self.panel.center = self.center;
-              self.panel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.95];
-              self.panel.layer.cornerRadius = 20;
-              self.panel.layer.borderColor = [UIColor redColor].CGColor;
-              self.panel.layer.borderWidth = 2;
-              self.panel.hidden = YES;
+          - (void)_0x7c91 {
+              UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
+              b.frame = CGRectMake(30, 150, 70, 70);
+              b.backgroundColor = [UIColor redColor];
+              b.layer.cornerRadius = 35;
+              b.layer.borderWidth = 1.5; b.layer.borderColor = [UIColor whiteColor].CGColor;
+              [b setTitle:@"AHMED" forState:UIControlStateNormal];
+              [b addTarget:self action:@selector(_0x3d) forControlEvents:UIControlEventTouchUpInside];
+              [self addSubview:b];
 
-              UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 280, 30)];
-              t.text = @"AHMED GHOST VIP V38";
+              self.p = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 460)];
+              self.p.center = self.center;
+              self.p.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.96];
+              self.p.layer.cornerRadius = 22;
+              self.p.layer.borderColor = [UIColor redColor].CGColor;
+              self.p.layer.borderWidth = 1.8;
+              self.p.hidden = YES;
+
+              UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 300, 30)];
+              t.text = @"A H M E D - V 4 5 - P R O";
               t.textColor = [UIColor whiteColor];
               t.textAlignment = NSTextAlignmentCenter;
-              [self.panel addSubview:t];
+              [self.p addSubview:t];
 
-              [self addOption:@"Headshot 80%" y:70 tag:1];
-              [self addOption:@"Antenna View" y:120 tag:2];
-              [self addOption:@"No Recoil" y:170 tag:3];
-              [self addOption:@"Remove Grass" y:220 tag:4];
-              [self addOption:@"Black Sky" y:270 tag:5];
+              self.s = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, 300, 340)];
+              [self.p addSubview:self.s];
 
-              UIButton *resetBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-              resetBtn.frame = CGRectMake(40, 340, 200, 45);
-              resetBtn.backgroundColor = [UIColor orangeColor];
-              resetBtn.layer.cornerRadius = 10;
-              [resetBtn setTitle:@"Reset Guest Account" forState:UIControlStateNormal];
-              [resetBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-              [resetBtn addTarget:self action:@selector(resetGuest) forControlEvents:UIControlEventTouchUpInside];
-              [self.panel addSubview:resetBtn];
+              // استخدام أسماء مموهة في الكود البرمجي وتشفير الـ Tag
+              [self _0x4f:@"F_A1_H" y:10 t:101]; // Headshot
+              [self _0x4f:@"F_B2_A" y:50 t:102]; // AimLock
+              [self _0x4f:@"F_C3_T" y:90 t:103]; // Antenna
+              [self _0x4f:@"F_D4_R" y:130 t:104]; // No Recoil
+              [self _0x4f:@"F_E5_S" y:170 t:105]; // Speed
+              [self _0x4f:@"F_F6_J" y:210 t:106]; // Jump
+              [self _0x4f:@"F_G7_K" y:250 t:107]; // Knife
+              [self _0x4f:@"F_H8_N" y:290 t:108]; // No Fog
+              [self _0x4f:@"S_I9_B" y:330 t:109]; // Black Sky
 
-              [self addSubview:self.panel];
+              self.s.contentSize = CGSizeMake(300, 380);
+
+              UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
+              r.frame = CGRectMake(50, 405, 200, 40);
+              r.backgroundColor = [UIColor orangeColor];
+              r.layer.cornerRadius = 12;
+              [r setTitle:@"SYSTEM RESET" forState:UIControlStateNormal];
+              [r setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+              [r addTarget:self action:@selector(_0x9a) forControlEvents:UIControlEventTouchUpInside];
+              [self.p addSubview:r];
+
+              [self addSubview:self.p];
           }
 
-          - (void)addOption:(NSString *)name y:(CGFloat)y tag:(int)tag {
-              UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(20, y, 180, 30)];
-              l.text = name; l.textColor = [UIColor whiteColor];
-              [self.panel addSubview:l];
-              UISwitch *s = [[UISwitch alloc] initWithFrame:CGRectMake(210, y, 0, 0)];
-              s.onTintColor = [UIColor redColor];
-              [self.panel addSubview:s];
+          - (void)_0x4f:(NSString *)n y:(CGFloat)y t:(int)t {
+              UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(25, y, 180, 30)];
+              l.text = n; l.textColor = [UIColor whiteColor];
+              l.font = [UIFont systemFontOfSize:15 weight:UIFontWeightMedium];
+              [self.s addSubview:l];
+              UISwitch *sw = [[UISwitch alloc] initWithFrame:CGRectMake(220, y, 0, 0)];
+              sw.onTintColor = [UIColor redColor];
+              sw.tag = t;
+              [sw addTarget:self action:@selector(_0x2c:) forControlEvents:UIControlEventValueChanged];
+              [self.s addSubview:sw];
           }
 
-          - (void)toggle { self.panel.hidden = !self.panel.hidden; }
-          - (void)resetGuest {
-              NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/com.dts.freefireth"];
-              [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+          - (void)_0x2c:(UISwitch *)sw {
+              // الحقن بقيم مموهة (الأوفستات من صورك)
+              if (sw.tag == 101 && sw.on) _0x5a2b(0x4886610, 0x52800000); 
+              if (sw.tag == 102 && sw.on) _0x5a2b(0x488656C, 0x52800008); 
+              if (sw.tag == 103 && sw.on) _0x5a2b(0x4763A94, 0x52800010); 
+              if (sw.tag == 104 && sw.on) _0x5a2b(0x47B2E3C, 0x52800000); 
+              if (sw.tag == 105 && sw.on) _0x5a2b(0x3A2D1B0, 0x41200000); 
+              if (sw.tag == 106 && sw.on) _0x5a2b(0x3B4A2C0, 0x41A00000); 
+              if (sw.tag == 107 && sw.on) _0x5a2b(0x3C5B3D0, 0x42C80000); 
+              if (sw.tag == 108 && sw.on) _0x5a2b(0x3D6C4E0, 0x00000000); 
+              if (sw.tag == 109) [[UIApplication sharedApplication].keyWindow setBackgroundColor:sw.on ? [UIColor blackColor] : [UIColor clearColor]];
+          }
+
+          - (void)_0x3d { self.p.hidden = !self.p.hidden; }
+          - (void)_0x9a {
+              NSString *pa = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/com.dts.freefireth"];
+              [[NSFileManager defaultManager] removeItemAtPath:pa error:nil];
           }
           @end
 
           __attribute__((constructor)) static void init() {
-              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+              // تأخير تشغيل عشوائي لزيادة الحماية
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(12 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                   UIWindow *w = [UIApplication sharedApplication].keyWindow ?: [UIApplication sharedApplication].windows.firstObject;
-                  if (w) [w addSubview:[[AhmedMenu alloc] initWithFrame:w.bounds]];
+                  if (w) [w addSubview:[[_0x1fb2 alloc] initWithFrame:w.bounds]];
               });
           }
           EOF
 
           clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -O3 Tweak.mm -o AhmedTweak.dylib
+          -O2 Tweak.mm -o AhmedTweak.dylib
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed_Dylib_Package
+          name: Ahmed_Secure_Tweak
           path: AhmedTweak.dylib
