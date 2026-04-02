@@ -1,5 +1,8 @@
-name: Ahmed-FF-Final-V50
+name: Ahmed-FF-Final-V51
 on: [push, workflow_dispatch]
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -74,7 +77,7 @@ jobs:
               [self addOpt:@"F_G7" y:250 t:107];
               [self addOpt:@"F_H8" y:290 t:108];
 
-              self.s.contentSize = CGSizeMake(300, 380);
+              self.s.contentSize = CGSizeMake(300, 400);
 
               UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
               r.frame = CGRectMake(50, 410, 200, 40);
@@ -119,12 +122,9 @@ jobs:
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
           -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Create Release
-        id: create_release
+      - name: Release Final
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: V50-FINAL
-          name: Ahmed Tweak V50
+          tag_name: "Ahmed_V51"
+          name: "Ahmed VIP Final"
           files: AhmedTweak.dylib
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
