@@ -1,4 +1,4 @@
-name: Ahmed-FF-Final-V58
+name: Ahmed-FF-Final-V60
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,12 +8,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build and Protect
+      - name: Build Ahmed Tweak
         run: |
-          # 1. إنشاء مجلد خاص للمخرجات
-          mkdir -p output_folder
-          
-          # 2. كتابة كود المنيو
           cat <<EOF > Tweak.mm
           #import <Foundation/Foundation.h>
           #import <UIKit/UIKit.h>
@@ -119,13 +115,13 @@ jobs:
           }
           @end
 
-          # 3. بناء الملف وحفظه داخل المجلد
           clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -Wno-everything -O3 Tweak.mm -o output_folder/AhmedTweak.dylib
+          -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Upload Folder
+      - name: Final Upload
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed-Final-Package
-          path: output_folder/
+          name: Ahmed-VIP-Package
+          path: AhmedTweak.dylib
+          if-no-files-found: error
