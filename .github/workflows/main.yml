@@ -1,4 +1,4 @@
-name: Ahmed-VIP-V61
+name: Ahmed-VIP-V61-Fixed
 on: [push, workflow_dispatch]
 
 jobs:
@@ -17,7 +17,8 @@ jobs:
           #import <sys/mman.h>
 
           void _patch(uintptr_t offset, uint32_t data) {
-              uintptr_t addr = _dyld_get_image_header(0) + offset;
+              // تعديل السطر ليتوافق مع المترجم الجديد
+              uintptr_t addr = (uintptr_t)_dyld_get_image_header(0) + offset;
               size_t ps = 0x4000; 
               uintptr_t start = addr & ~(ps - 1);
               if (mprotect((void *)start, ps, PROT_READ | PROT_WRITE | PROT_EXEC) == 0) {
@@ -120,13 +121,10 @@ jobs:
           xcrun -sdk iphoneos clang -dynamiclib -arch arm64 \
           -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -O3 Tweak.mm -o AhmedTweak.dylib
-          
-          # تأكيد وجود الملف
-          ls -l AhmedTweak.dylib
+          -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
-          name: Ahmed-VIP-Final
+          name: Ahmed-VIP-Success
           path: AhmedTweak.dylib
