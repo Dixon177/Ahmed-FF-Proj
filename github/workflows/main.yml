@@ -1,21 +1,36 @@
-name: Ahmed-FF-Final-Build
+name: Ahmed-FF-Final-V56
 on: [push, workflow_dispatch]
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Compile Ahmed Tweak
+      - name: Build Ahmed Tweak
         run: |
           cat <<EOF > Tweak.mm
           #import <Foundation/Foundation.h>
           #import <UIKit/UIKit.h>
+          #import <mach-o/dyld.h>
+          #import <sys/mman.h>
+
+          void _patch(uintptr_t offset, uint32_t data) {
+              uintptr_t addr = _dyld_get_image_header(0) + offset;
+              size_t ps = 0x4000; 
+              uintptr_t start = addr & ~(ps - 1);
+              if (mprotect((void *)start, ps, PROT_READ | PROT_WRITE | PROT_EXEC) == 0) {
+                  *(uint32_t *)addr = data;
+              }
+          }
 
           @interface AhmedMenu : UIView
-          @property (nonatomic, strong) UIView *panel;
+          @property (nonatomic, strong) UIView *p;
+          @property (nonatomic, strong) UIScrollView *s;
           @end
 
           @implementation AhmedMenu
@@ -28,69 +43,88 @@ jobs:
               return self;
           }
 
+          - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+              UIView *hv = [super hitTest:point withEvent:event];
+              return (hv == self) ? nil : hv;
+          }
+
           - (void)setupUI {
-              // الزر العائم
-              UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-              btn.frame = CGRectMake(30, 150, 60, 60);
-              btn.backgroundColor = [UIColor redColor];
-              btn.layer.cornerRadius = 30;
-              [btn setTitle:@"AHMED" forState:UIControlStateNormal];
-              [btn addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
-              [self addSubview:btn];
+              UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
+              b.frame = CGRectMake(30, 150, 70, 70);
+              b.backgroundColor = [UIColor redColor];
+              b.layer.cornerRadius = 35;
+              [b setTitle:@"AHMED" forState:UIControlStateNormal];
+              [b addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
+              [self addSubview:b];
 
-              // القائمة (المود منيو)
-              self.panel = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 260, 350)];
-              self.panel.center = self.center;
-              self.panel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.9];
-              self.panel.layer.cornerRadius = 20;
-              self.panel.layer.borderColor = [UIColor redColor].CGColor;
-              self.panel.layer.borderWidth = 2;
-              self.panel.hidden = YES;
+              self.p = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 480)];
+              self.p.center = self.center;
+              self.p.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.95];
+              self.p.layer.cornerRadius = 20;
+              self.p.layer.borderColor = [UIColor redColor].CGColor;
+              self.p.layer.borderWidth = 2;
+              self.p.hidden = YES;
 
-              UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 260, 30)];
-              t.text = @"AHMED VIP V36";
-              t.textColor = [UIColor whiteColor];
-              t.textAlignment = NSTextAlignmentCenter;
-              [self.panel addSubview:t];
+              self.s = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 300, 350)];
+              [self.p addSubview:self.s];
 
-              // ميزات فري فاير (الواجهة فقط للتحكم)
-              [self addOption:@"Headshot 80%" y:70];
-              [self addOption:@"Safe Antenna" y:120];
-              [self addOption:@"No Recoil" y:170];
-              [self addOption:@"Remove Grass" y:220];
+              [self addOpt:@"F_A1" y:10 t:101];
+              [self addOpt:@"F_B2" y:50 t:102];
+              [self addOpt:@"F_C3" y:90 t:103];
+              [self addOpt:@"F_D4" y:130 t:104];
+              [self addOpt:@"F_E5" y:170 t:105];
+              [self addOpt:@"F_F6" y:210 t:106];
+              [self addOpt:@"F_G7" y:250 t:107];
+              [self addOpt:@"F_H8" y:290 t:108];
 
-              [self addSubview:self.panel];
+              self.s.contentSize = CGSizeMake(300, 400);
+
+              UIButton *r = [UIButton buttonWithType:UIButtonTypeSystem];
+              r.frame = CGRectMake(50, 410, 200, 40);
+              r.backgroundColor = [UIColor orangeColor];
+              r.layer.cornerRadius = 10;
+              [r setTitle:@"RESET" forState:UIControlStateNormal];
+              [r setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+              [r addTarget:self action:@selector(reset) forControlEvents:UIControlEventTouchUpInside];
+              [self.p addSubview:r];
+              [self addSubview:self.p];
           }
 
-          - (void)addOption:(NSString *)name y:(CGFloat)y {
-              UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(20, y, 160, 30)];
-              l.text = name; l.textColor = [UIColor whiteColor];
-              [self.panel addSubview:l];
-              UISwitch *s = [[UISwitch alloc] initWithFrame:CGRectMake(180, y, 0, 0)];
-              s.onTintColor = [UIColor redColor];
-              [self.panel addSubview:s];
+          - (void)addOpt:(NSString *)n y:(CGFloat)y t:(int)t {
+              UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(20, y, 180, 30)];
+              l.text = n; l.textColor = [UIColor whiteColor];
+              [self.s addSubview:l];
+              UISwitch *sw = [[UISwitch alloc] initWithFrame:CGRectMake(220, y, 0, 0)];
+              sw.tag = t;
+              [sw addTarget:self action:@selector(sw:) forControlEvents:UIControlEventValueChanged];
+              [self.s addSubview:sw];
           }
 
-          - (void)toggle { self.panel.hidden = !self.panel.hidden; }
+          - (void)sw:(UISwitch *)sw {
+              if (sw.tag == 101 && sw.on) _patch(0x4886610, 0x52800000); 
+              if (sw.tag == 102 && sw.on) _patch(0x488656C, 0x52800008); 
+              if (sw.tag == 103 && sw.on) _patch(0x4763A94, 0x52800010); 
+              if (sw.tag == 104 && sw.on) _patch(0x47B2E3C, 0x52800000); 
+              if (sw.tag == 105 && sw.on) _patch(0x3A2D1B0, 0x41200000); 
+              if (sw.tag == 106 && sw.on) _patch(0x3B4A2C0, 0x41A00000); 
+              if (sw.tag == 107 && sw.on) _patch(0x3C5B3D0, 0x42C80000); 
+              if (sw.tag == 108 && sw.on) _patch(0x3D6C4E0, 0x00000000); 
+          }
+
+          - (void)toggle { self.p.hidden = !self.p.hidden; }
+          - (void)reset {
+              NSString *pa = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/com.dts.freefireth"];
+              [[NSFileManager defaultManager] removeItemAtPath:pa error:nil];
+          }
           @end
-
-          __attribute__((constructor)) static void init() {
-              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                  UIWindow *w = [UIApplication sharedApplication].keyWindow ?: [UIApplication sharedApplication].windows.firstObject;
-                  AhmedMenu *m = [[AhmedMenu alloc] initWithFrame:w.bounds];
-                  m.backgroundColor = [UIColor clearColor];
-                  [w addSubview:m];
-              });
-          }
-          EOF
 
           clang -dynamiclib -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
-          -O3 Tweak.mm -o AhmedTweak.dylib
-          strip -x AhmedTweak.dylib
+          -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Save Dylib
-        uses: actions/upload-artifact@v4
+      - name: Create New Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: Ahmed_Dylib_Package
-          path: AhmedTweak.dylib
+          tag_name: "Ahmed_Final_V56"
+          name: "Ahmed VIP Final V56"
+          files: AhmedTweak.dylib
