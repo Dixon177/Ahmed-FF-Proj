@@ -1,8 +1,5 @@
-name: Ahmed-FF-Final-V56
+name: Ahmed-FF-Final-V57
 on: [push, workflow_dispatch]
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -122,9 +119,8 @@ jobs:
           -framework Foundation -framework UIKit -framework CoreGraphics -lc++ \
           -Wno-everything -O3 Tweak.mm -o AhmedTweak.dylib
 
-      - name: Create New Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload Tweak as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: "Final_Success_V56"
-          name: "Ahmed Tweak Final V56"
-          files: AhmedTweak.dylib
+          name: Ahmed-Final-Dylib
+          path: AhmedTweak.dylib
